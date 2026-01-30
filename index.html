@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Who's Got Sun?</title>
+    <meta
+      name="description"
+      content="Side-by-side weather comparison for Adelaide, Darwin, Melbourne, and Sydney."
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div class="title-wrap">
+        <h1>Who's Got Sun?</h1>
+        <p class="subtitle">Adelaide • Darwin • Melbourne • Sydney</p>
+        <div class="temp-toggle" role="group" aria-label="Temperature display">
+          <div class="temp-toggle-track" id="tempToggleTrack">
+            <button class="temp-toggle-option active" type="button" data-temp="current" aria-pressed="true">Current</button>
+            <button class="temp-toggle-option" type="button" data-temp="peak" aria-pressed="false">Peak</button>
+            <span class="temp-toggle-indicator" aria-hidden="true"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-meta">
+        <div class="status" id="status" aria-live="polite"></div>
+        <div class="actions">
+          <button class="btn btn--refresh" id="refreshBtn" type="button" aria-label="Refresh">
+            <span class="btn-refresh-icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9"/><path d="M21 3v6h-6"/></svg>
+            </span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="grid" id="grid" aria-label="Weather comparison cards">
+        <!-- Cards injected by app.js -->
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>Made with Love by ☀️ Oliver ☀️</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/dist/twemoji.min.js" crossorigin="anonymous"></script>
+    <script defer src="./app.js"></script>
+  </body>
+</html>
