@@ -1,7 +1,7 @@
 /* Clean, family-friendly styling with strong contrast. */
 
 :root {
-  color-scheme: dark;
+  color-scheme: dark !important;
 }
 
 * {
@@ -13,13 +13,18 @@ body {
   height: 100%;
 }
 
+html {
+  background: radial-gradient(1000px 700px at 20% -20%, rgba(122, 162, 255, 0.25), transparent 55%),
+    radial-gradient(900px 650px at 100% 0%, rgba(16, 185, 129, 0.14), transparent 55%),
+    #0b1220;
+  background-attachment: fixed;
+}
+
 body {
   margin: 0;
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial,
     "Apple Color Emoji", "Segoe UI Emoji";
-  background: radial-gradient(1000px 700px at 20% -20%, rgba(122, 162, 255, 0.25), transparent 55%),
-    radial-gradient(900px 650px at 100% 0%, rgba(16, 185, 129, 0.14), transparent 55%),
-    #0b1220;
+  background: transparent;
   color: #e7f6fc !important;
   font-size: 15px;
 }
