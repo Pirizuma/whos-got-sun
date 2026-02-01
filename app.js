@@ -472,7 +472,16 @@ async function loadCity(city) {
 
   const current = forecast.current;
   const location = forecast.location;
-  const today = forecast.forecast?.forecastday?.[0];
+  const forecastdays = forecast.forecast?.forecastday || [];
+  // Resolve "today" by location's local date (YYYY-MM-DD) so peak UV is always for the correct calendar day in that city
+  const localDateStr =
+    (location?.localtime && location.localtime.slice(0, 10)) ||
+    (current?.last_updated && current.last_updated.slice(0, 10)) ||
+    null;
+  const today =
+    localDateStr && forecastdays.length > 0
+      ? forecastdays.find((fd) => fd.date === localDateStr) || forecastdays[0]
+      : forecastdays[0];
   const day = today?.day;
   const hours = today?.hour || [];
 
