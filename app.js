@@ -253,8 +253,10 @@ function updatePageBackground() {
 function ensureKeyPresentOrWarn() {
   // Treat only the original placeholder as invalid.
   if (!WEATHERAPI_KEY || WEATHERAPI_KEY.includes("YOUR_WEATHERAPI_KEY_HERE")) {
-    statusEl.innerHTML =
-      '<span class="error">Add your WeatherAPI key in <code>app.js</code> (see README).</span>';
+    if (statusEl) {
+      statusEl.innerHTML =
+        '<span class="error">Add your WeatherAPI key in <code>app.js</code> (see README).</span>';
+    }
     return false;
   }
   return true;
@@ -453,8 +455,10 @@ function updateCardError(cityId, cityName, message) {
 }
 
 function setStatus(text, isError = false) {
-  statusEl.textContent = text;
-  statusEl.classList.toggle("error", isError);
+  if (statusEl) {
+    statusEl.textContent = text;
+    statusEl.classList.toggle("error", isError);
+  }
 }
 
 /**
@@ -556,7 +560,6 @@ async function refreshAll() {
     return;
   }
 
-  setStatus("Refreshing…");
   refreshBtn.disabled = true;
   refreshBtn.classList.add("btn--loading");
 
@@ -576,17 +579,6 @@ async function refreshAll() {
       updateCardError(city.id, city.name, msg);
     }
   });
-
-  const finishedAt = new Date();
-
-  if (okCount === CITIES.length) {
-    setStatus(`Last refresh: ${formatClock(finishedAt)}`);
-  } else {
-    setStatus(
-      `Last refresh: ${formatClock(finishedAt)} — loaded ${okCount}/${CITIES.length}`,
-      true
-    );
-  }
 
   refreshBtn.disabled = false;
   refreshBtn.classList.remove("btn--loading");

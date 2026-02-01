@@ -1,5 +1,9 @@
 /* Clean, family-friendly styling with strong contrast. */
 
+:root {
+  color-scheme: dark;
+}
+
 * {
   box-sizing: border-box;
 }
