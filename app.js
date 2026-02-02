@@ -371,7 +371,9 @@ function updateCard(cityId, model) {
   const windCompass = degToCompass(windDeg);
   const windValueText = `${Math.round(displayWindKph)} km/h ${windDirText || windCompass}`;
   const tempColor = getTempColor(displayTempC);
-  const windFlowDeg = Math.round(windDeg) % 360;
+  /* Arrow and flow both show where wind is going (blowing TO). Flow animation moves "right" in element, so rotation needs -90° offset to match arrow. */
+  const windFlowDeg = (Math.round(windDeg) + 180) % 360;
+  const windFlowBgDeg = (windFlowDeg + 270) % 360;
   const windAnimDuration = Math.max(1.2, 5 - (displayWindKph || 0) / 20);
   card.style.background = getCardBackground(displayTempC);
   const wasSkeleton = card.classList.contains("card--skeleton");
@@ -417,13 +419,13 @@ function updateCard(cityId, model) {
           </div>
         </div>
 
-        <div class="pill pill-wind" style="--wind-deg: ${windFlowDeg}deg; --wind-duration: ${windAnimDuration}s">
+        <div class="pill pill-wind" style="--wind-deg: ${windFlowBgDeg}deg; --wind-duration: ${windAnimDuration}s">
           <div class="wind-flow-bg" aria-hidden="true"></div>
           <div class="label">Wind</div>
           <div class="value">
             <div class="wind">
               <div class="wind-arrow" aria-hidden="true">
-                <span style="transform: rotate(${Math.round(windDeg)}deg)">↑</span>
+                <span style="transform: rotate(${windFlowDeg}deg)">↑</span>
               </div>
               <span>${escapeHtml(windValueText)}</span>
             </div>
@@ -520,6 +522,10 @@ async function loadCity(city) {
   );
 
   const todayMaxWindKph = typeof day?.maxwind_kph === "number" ? day.maxwind_kph : null;
+
+  console.log(
+    `[Wind Direction] ${city.name}: API degrees=${current.wind_degree ?? "—"}°, compass=${current.wind_dir ?? "—"}, arrow should point ${current.wind_dir ?? "—"}, flow should go opposite direction`
+  );
 
   let peakHour = null;
   if (hours.length > 0) {
@@ -662,6 +668,23 @@ function init() {
   startAutoRefresh();
   updatePageBackground();
   setInterval(updatePageBackground, 60 * 1000);
+
+  const isTouchDevice =
+    "ontouchstart" in window || navigator.maxTouchPoints > 0;
+  if (isTouchDevice) {
+    document.body.addEventListener("click", (e) => {
+      const pill = e.target.closest(".pill-uv, .pill-wind");
+      const activeClass = "active";
+      const allPills = document.querySelectorAll(".pill-uv, .pill-wind");
+      if (pill) {
+        const wasActive = pill.classList.contains(activeClass);
+        allPills.forEach((p) => p.classList.remove(activeClass));
+        if (!wasActive) pill.classList.add(activeClass);
+      } else {
+        allPills.forEach((p) => p.classList.remove(activeClass));
+      }
+    });
+  }
 }
 
 init();

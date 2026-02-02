@@ -13,10 +13,9 @@ body {
   height: 100%;
 }
 
+/* https://grabient.com/HQJgHCA0wMztBGA7DaBWALE6SBsAGaXEBaEXbWXVYBATm0JGHw1Q1rDunyTBwxRgSfIQC0CYGzBA?angle=135 */
 html {
-  background: radial-gradient(1000px 700px at 20% -20%, rgba(122, 162, 255, 0.25), transparent 55%),
-    radial-gradient(900px 650px at 100% 0%, rgba(16, 185, 129, 0.14), transparent 55%),
-    #0b1220;
+  background: linear-gradient(135deg, #000032 0%, #184664 50%, #4eb490 100%);
   background-attachment: fixed;
 }
 
@@ -410,6 +409,32 @@ a {
   border-color: rgba(147, 51, 234, 0.5);
 }
 
+/* Tap-to-activate on touch: same as hover */
+.pill-uv.uv-low.active {
+  animation: uvPulseLow 1.5s ease-in-out infinite;
+  border-color: rgba(22, 163, 74, 0.45);
+}
+
+.pill-uv.uv-mod.active {
+  animation: uvPulseMod 1.5s ease-in-out infinite;
+  border-color: rgba(250, 204, 21, 0.5);
+}
+
+.pill-uv.uv-high.active {
+  animation: uvPulseHigh 1.5s ease-in-out infinite;
+  border-color: rgba(251, 146, 60, 0.5);
+}
+
+.pill-uv.uv-very.active {
+  animation: uvPulseVery 1.5s ease-in-out infinite;
+  border-color: rgba(239, 68, 68, 0.5);
+}
+
+.pill-uv.uv-extreme.active {
+  animation: uvPulseExtreme 1.5s ease-in-out infinite;
+  border-color: rgba(147, 51, 234, 0.5);
+}
+
 @keyframes uvPulseLow {
   0%, 100% { background: rgba(13, 92, 46, 0.35); }
   50% { background: rgba(22, 163, 74, 0.35); }
@@ -460,6 +485,10 @@ a {
 }
 
 .pill-wind:hover .wind-flow-bg {
+  opacity: 1;
+}
+
+.pill-wind.active .wind-flow-bg {
   opacity: 1;
 }
 
