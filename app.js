@@ -336,10 +336,6 @@ function updateCard(cityId, model) {
     windDirText,
   } = model;
 
-  // #region agent log
-  (function(d){fetch('http://127.0.0.1:7242/ingest/22893b8e-ee93-43d7-994f-a498807cad2f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)}).catch(()=>{});console.log('[agent] updateCard',d);})({location:'app.js:updateCard',message:'Model and tempMode before display',data:{cityName,cityId,tempMode,nowTempC,todayMaxC,typeofTodayMaxC:typeof todayMaxC,same:nowTempC===todayMaxC},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H3 H4'});
-  // #endregion
-
   const displayUpdated =
     tempMode === "peak" && typeof peakHour === "number"
       ? formatPeakTime(peakHour)
@@ -349,9 +345,6 @@ function updateCard(cityId, model) {
     tempMode === "peak" && typeof todayMaxC === "number"
       ? todayMaxC
       : nowTempC;
-  // #region agent log
-  (function(d){fetch('http://127.0.0.1:7242/ingest/22893b8e-ee93-43d7-994f-a498807cad2f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)}).catch(()=>{});console.log('[agent] displayTempC',d);})({location:'app.js:updateCard displayTempC',message:'Display branch and result',data:{cityName,cityId,tempMode,branch:tempMode==='peak'&&typeof todayMaxC==='number'?'peak':'current',displayTempC,nowTempC,todayMaxC},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H5'});
-  // #endregion
   const displayFeelsLikeC =
     tempMode === "peak" && typeof todayMaxFeelsLikeC === "number"
       ? Math.max(todayMaxFeelsLikeC, feelsLikeC)
@@ -498,9 +491,6 @@ async function loadCity(city) {
     `[Temp] ${city.name}: current.temp_c=${currentTempC}, forecast.forecastday[0].day.maxtemp_c=${todayMaxC}`,
     todayMaxC != null && currentTempC != null && todayMaxC < currentTempC ? "(peak < current, late-day possible)" : ""
   );
-  // #region agent log
-  (function(d){fetch('http://127.0.0.1:7242/ingest/22893b8e-ee93-43d7-994f-a498807cad2f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)}).catch(()=>{});console.log('[agent] loadCity',d);})({location:'app.js:loadCity',message:'Temp API values and return',data:{cityName:city.name,currentTempC,todayMaxC,returnedNowTempC:currentTempC??current.temp_c,returnedTodayMaxC:todayMaxC,same:currentTempC===todayMaxC},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H1 H2'});
-  // #endregion
   const todayMaxFeelsLikeC =
     hours.length > 0
       ? Math.max(...hours.map((h) => h.feelslike_c ?? -Infinity))
@@ -672,17 +662,25 @@ function init() {
   const isTouchDevice =
     "ontouchstart" in window || navigator.maxTouchPoints > 0;
   if (isTouchDevice) {
+    // Safari iOS needs explicit event listeners on the elements, not just body
     document.body.addEventListener("click", (e) => {
       const pill = e.target.closest(".pill-uv, .pill-wind");
       const activeClass = "active";
       const allPills = document.querySelectorAll(".pill-uv, .pill-wind");
+
       if (pill) {
+        e.preventDefault(); // Safari iOS needs this
         const wasActive = pill.classList.contains(activeClass);
         allPills.forEach((p) => p.classList.remove(activeClass));
         if (!wasActive) pill.classList.add(activeClass);
       } else {
         allPills.forEach((p) => p.classList.remove(activeClass));
       }
+    });
+
+    // Make elements explicitly tappable for Safari
+    document.querySelectorAll(".pill-uv, .pill-wind").forEach(pill => {
+      pill.style.cursor = "pointer";
     });
   }
 }
